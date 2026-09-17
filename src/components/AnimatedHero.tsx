@@ -353,12 +353,12 @@ export default function AnimatedHero() {
               pointerEvents: heroPointerEvents,
             }}
           >
-            <header className="absolute inset-x-0 top-0 z-10 bg-black/20 px-5 py-4 backdrop-blur-md sm:px-7 md:px-10 lg:px-12">
+            <header className="absolute inset-x-0 top-0 z-10 px-5 py-5 sm:px-7 sm:py-6 md:px-10 lg:px-12">
               <div className="flex items-center justify-between gap-5">
                 <Link
                   href="/"
                   aria-label="Diction home"
-                  className="relative block h-5 w-[7.5rem] shrink-0 overflow-hidden sm:h-6 sm:w-[8.5rem]"
+                  className="relative block h-6 w-[8.5rem] shrink-0 overflow-hidden sm:h-7 sm:w-[10rem] md:h-8 md:w-[11.5rem]"
                 >
                   <Image
                     src="/ChatGPT_Image_Aug_18__2026__11_36_22_PM-removebg-preview.png"
@@ -366,20 +366,20 @@ export default function AnimatedHero() {
                     fill
                     className="object-cover object-center"
                     loading="eager"
-                    sizes="136px"
+                    sizes="(min-width: 768px) 184px, (min-width: 640px) 160px, 136px"
                   />
                 </Link>
 
               <nav
                 aria-label="Primary navigation"
-                className="hidden items-center gap-7 text-[12px] font-medium text-white/62 lg:flex xl:gap-9"
+                className="hidden items-center gap-6 text-[0.58rem] font-bold uppercase tracking-[0.13em] text-white/62 lg:flex xl:gap-8 xl:text-[0.62rem]"
               >
                 {heroNavigation.map((item) => (
                   <Link
                     key={item.label}
                     href={item.href}
                     aria-current={item.href === "/" ? "page" : undefined}
-                    className={`whitespace-nowrap py-2 transition-colors ${item.href === "/" ? "text-white" : "hover:text-white"}`}
+                    className="whitespace-nowrap transition-colors hover:text-white"
                   >
                     {item.label}
                   </Link>
@@ -388,7 +388,7 @@ export default function AnimatedHero() {
 
               <Link
                 href="/known#register"
-                className="hidden min-h-9 items-center gap-2 rounded-lg bg-[#2f7cf6] px-4 text-[12px] font-semibold text-white transition-[background-color,transform] hover:scale-[1.02] hover:bg-[#6f3ed7] lg:inline-flex"
+                className="hidden min-h-11 items-center gap-2 rounded-full border border-white/20 bg-black/45 px-5 text-[0.58rem] font-bold uppercase tracking-[0.13em] text-white transition-colors hover:bg-white hover:text-black lg:inline-flex xl:text-[0.62rem]"
               >
                 Join the Free Masterclass <ArrowRight size={14} aria-hidden="true" />
               </Link>
@@ -399,7 +399,7 @@ export default function AnimatedHero() {
                 aria-expanded={menuOpen}
                 aria-controls="hero-mobile-navigation"
                 aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-                className="grid size-9 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/16 lg:hidden"
+                className="grid size-11 place-items-center rounded-full border border-white/20 bg-black/45 text-white lg:hidden"
               >
                 {menuOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
               </button>
@@ -409,7 +409,7 @@ export default function AnimatedHero() {
                 <nav
                   id="hero-mobile-navigation"
                   aria-label="Mobile navigation"
-                  className="mt-3 rounded-3xl bg-[#101010]/96 p-3 text-sm font-medium text-white/72 shadow-2xl lg:hidden"
+                  className="mt-3 rounded-3xl border border-white/15 bg-[#08070a]/96 p-3 text-[0.64rem] font-bold uppercase tracking-[0.14em] text-white/72 shadow-2xl lg:hidden"
                 >
                   <div className="grid">
                     {heroNavigation.map((item) => (
@@ -417,7 +417,7 @@ export default function AnimatedHero() {
                         key={item.label}
                         href={item.href}
                         onClick={() => setMenuOpen(false)}
-                        className={`rounded-2xl px-4 py-3.5 transition-colors ${item.href === "/" ? "bg-white/10 text-white" : "hover:bg-white/8 hover:text-white"}`}
+                        className="rounded-2xl px-4 py-3.5 transition-colors hover:bg-white/8 hover:text-white"
                       >
                         {item.label}
                       </Link>
@@ -426,7 +426,8 @@ export default function AnimatedHero() {
                   <Link
                     href="/known#register"
                     onClick={() => setMenuOpen(false)}
-                    className="mt-2 flex min-h-12 items-center justify-between rounded-xl bg-[#2f7cf6] px-5 font-semibold text-white transition-transform active:scale-[0.98]"
+                    className="mt-2 flex min-h-12 items-center justify-between rounded-full bg-white px-5 text-black"
+                    style={{ color: "#08070a" }}
                   >
                     Join the Free Masterclass <ArrowRight size={15} aria-hidden="true" />
                   </Link>

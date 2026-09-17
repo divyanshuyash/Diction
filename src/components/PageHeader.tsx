@@ -1,44 +1,30 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { primaryNavigation } from "@/lib/siteContent";
 
 export default function PageHeader() {
-  const pathname = usePathname();
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    if (href === "/about") return pathname === "/about" || pathname.startsWith("/capabilities") || pathname.startsWith("/collective");
-    return pathname === href || pathname.startsWith(`${href}/`);
-  };
-  const masterclassActive = pathname.startsWith("/known") || pathname.startsWith("/register") || pathname.startsWith("/thank-you");
-
   return (
-    <header className="absolute inset-x-0 top-0 z-50 px-5 text-white md:px-10">
-      <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-5">
-        <Link href="/" className="w-24 shrink-0 md:w-28" aria-label="Diction home">
-          <Image src="/diction-wordmark.png" alt="Diction" width={2155} height={730} className="h-auto w-full" loading="eager" sizes="112px" />
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#080808]/92 px-5 text-white backdrop-blur-xl md:px-10">
+      <div className="mx-auto flex h-20 max-w-[1320px] items-center justify-between gap-5">
+        <Link href="/" className="w-32 shrink-0 sm:w-36 md:w-40" aria-label="Diction home">
+          <Image src="/diction-wordmark.png" alt="Diction" width={2155} height={730} className="h-auto w-full" loading="eager" sizes="(min-width: 768px) 160px, (min-width: 640px) 144px, 128px" />
         </Link>
 
-        <nav className="hidden items-center gap-7 text-[12px] font-medium text-white/58 lg:flex xl:gap-9" aria-label="Primary navigation">
-          {primaryNavigation.map((item) => {
-            const active = isActive(item.href);
-            return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`whitespace-nowrap py-2 transition-colors ${active ? "text-white" : "hover:text-white"}`}>{item.label}</Link>;
-          })}
+        <nav className="hidden items-center gap-6 text-[10px] font-bold uppercase tracking-[0.14em] text-white/52 lg:flex xl:gap-8" aria-label="Primary navigation">
+          {primaryNavigation.map((item) => <Link key={item.href} href={item.href} className="whitespace-nowrap transition-colors hover:text-white">{item.label}</Link>)}
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link href="/register" aria-current={masterclassActive ? "page" : undefined} className={`hidden min-h-9 items-center gap-2 rounded-lg px-4 text-[12px] font-semibold transition-[background-color,transform] hover:scale-[1.02] sm:inline-flex ${masterclassActive ? "bg-white text-[#171717]" : "bg-[#2f7cf6] text-white hover:bg-[#6f3ed7]"}`}>Reserve my seat <ArrowRight size={13} aria-hidden="true" /></Link>
+          <Link href="/register" className="hidden min-h-11 items-center gap-2 rounded-full border border-white/18 px-5 text-[10px] font-bold uppercase tracking-[0.13em] transition-colors hover:bg-white hover:text-black sm:inline-flex">Reserve my seat <ArrowRight size={13} aria-hidden="true" /></Link>
           <details className="group relative lg:hidden">
-            <summary className="flex size-9 cursor-pointer list-none items-center justify-center rounded-full bg-white/8 transition-colors hover:bg-white/14 [&::-webkit-details-marker]:hidden">
+            <summary className="flex size-11 cursor-pointer list-none items-center justify-center rounded-full border border-white/18 bg-white/[0.03] [&::-webkit-details-marker]:hidden">
               <span className="sr-only">Open navigation</span><ChevronDown size={17} aria-hidden="true" className="transition-transform group-open:rotate-180" />
             </summary>
-            <nav aria-label="Mobile navigation" className="absolute right-0 mt-3 w-[min(19rem,calc(100vw-2rem))] rounded-3xl bg-[#171717] p-3 shadow-[0_18px_55px_rgba(0,0,0,0.35)]">
-              {primaryNavigation.map((item) => { const active = isActive(item.href); return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`block rounded-2xl px-4 py-3 text-sm font-medium transition-colors ${active ? "bg-white/10 text-white" : "text-white/58 hover:bg-white/8 hover:text-white"}`}>{item.label}</Link>; })}
-              <Link href="/capabilities" aria-current={pathname.startsWith("/capabilities") ? "page" : undefined} className={`block rounded-2xl px-4 py-3 text-sm font-medium transition-colors ${pathname.startsWith("/capabilities") ? "bg-white/10 text-white" : "text-white/58 hover:bg-white/8 hover:text-white"}`}>Capabilities</Link>
-              <Link href="/known" aria-current={masterclassActive ? "page" : undefined} className="mt-2 flex min-h-11 items-center justify-between rounded-xl bg-[#2f7cf6] px-5 text-sm font-semibold text-white">KNOWN masterclass <ArrowRight size={15} aria-hidden="true" /></Link>
+            <nav aria-label="Mobile navigation" className="absolute right-0 mt-3 w-[min(19rem,calc(100vw-2rem))] rounded-3xl border border-white/12 bg-[#0b0b0b] p-3 shadow-2xl">
+              {primaryNavigation.map((item) => <Link key={item.href} href={item.href} className="block rounded-2xl px-4 py-3 text-xs font-bold uppercase tracking-[0.13em] text-white/58 transition-colors hover:bg-white/6 hover:text-white">{item.label}</Link>)}
+              <Link href="/capabilities" className="block rounded-2xl px-4 py-3 text-xs font-bold uppercase tracking-[0.13em] text-white/58 transition-colors hover:bg-white/6 hover:text-white">Capabilities</Link>
+              <Link href="/known" className="mt-2 flex min-h-12 items-center justify-between rounded-full bg-white px-5 text-xs font-bold uppercase tracking-[0.12em] text-black">KNOWN masterclass <ArrowRight size={15} aria-hidden="true" /></Link>
             </nav>
           </details>
         </div>

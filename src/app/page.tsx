@@ -1,11 +1,9 @@
-import HomeFounderHero from "@/components/HomeFounderHero";
-import HomeShowcase from "@/components/HomeShowcase";
+import AnimatedHero from "@/components/AnimatedHero";
 
 export default function Home() {
   return (
-    <main className="min-h-svh overflow-x-clip bg-black text-white">
-      <HomeFounderHero />
-      <HomeShowcase />
+    <main className="h-svh overflow-hidden overscroll-none bg-black text-white">
+      <AnimatedHero />
     </main>
   );
 }
