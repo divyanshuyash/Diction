@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CalendarClock, Check, MessageCircle } from "lucide-react";
 
 type Registration = { firstName?: string; session?: string; whatsappConsent?: string };
 
 export default function RegistrationConfirmation({ whatsappNumber }: { whatsappNumber?: string }) {
-  const [registration, setRegistration] = useState<Registration>({});
-  useEffect(() => {
+  const [registration] = useState<Registration>(() => {
+    if (typeof window === "undefined") return {};
     const stored = sessionStorage.getItem("diction-known-registration");
-    if (!stored) return;
-    try { setRegistration(JSON.parse(stored)); } catch { setRegistration({}); }
-  }, []);
+    if (!stored) return {};
+    try { return JSON.parse(stored); } catch { return {}; }
+  });
 
   const cleanNumber = whatsappNumber?.replace(/\D/g, "");
   const message = encodeURIComponent(`Hi Diction, I have registered for KNOWN${registration.firstName ? ` as ${registration.firstName}` : ""}. Please send my class reminders here.`);

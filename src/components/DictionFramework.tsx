@@ -11,7 +11,7 @@ export default function DictionFramework({ compact = false }: { compact?: boolea
           <p className="body-large max-w-xl text-black/52 lg:justify-self-end">A digital presence becomes useful when positioning, audience, content, trust, platforms, opportunities and relationships reinforce one another.</p>
         </div>
         <div className="mt-16 border-t border-black/12">
-          {framework.slice(0, compact ? 4 : framework.length).map((item, index) => (
+          {framework.slice(0, compact ? 4 : framework.length).map((item) => (
             <details key={`${item.letter}-${item.title}`} className="group border-b border-black/12">
               <summary className="grid cursor-pointer list-none gap-5 py-6 [&::-webkit-details-marker]:hidden md:grid-cols-[72px_0.8fr_1.2fr] md:items-center md:py-8">
                 <span className="text-3xl font-black text-[#7134cb]">{item.letter}</span>
