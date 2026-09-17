@@ -8,9 +8,12 @@ type Registration = { firstName?: string; session?: string; whatsappConsent?: st
 export default function RegistrationConfirmation({ whatsappNumber }: { whatsappNumber?: string }) {
   const [registration, setRegistration] = useState<Registration>({});
   useEffect(() => {
-    const stored = sessionStorage.getItem("diction-known-registration");
-    if (!stored) return;
-    try { setRegistration(JSON.parse(stored)); } catch { setRegistration({}); }
+    const frame = requestAnimationFrame(() => {
+      const stored = sessionStorage.getItem("diction-known-registration");
+      if (!stored) return;
+      try { setRegistration(JSON.parse(stored)); } catch { setRegistration({}); }
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const cleanNumber = whatsappNumber?.replace(/\D/g, "");
@@ -18,6 +21,6 @@ export default function RegistrationConfirmation({ whatsappNumber }: { whatsappN
   const whatsappHref = cleanNumber ? `https://wa.me/${cleanNumber}?text=${message}` : null;
 
   return (
-    <div className="mx-auto max-w-4xl text-center"><div className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-purple-300/30 bg-purple-400/10 text-purple-200"><Check size={28} /></div><p className="section-label mt-8 text-[#bd84ff]">Your place is reserved</p><h1 className="editorial-title mx-auto mt-7 max-w-[10ch]">{registration.firstName ? `${registration.firstName}, you are on the path to being known.` : "You are on the path to being known."}</h1><p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-white/52 md:text-lg">Watch your inbox for the next live session schedule, confirmation details and toolkit access.</p><div className="mx-auto mt-10 grid max-w-2xl gap-3 text-left sm:grid-cols-2"><div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"><CalendarClock size={19} className="text-[#bd84ff]" /><h2 className="mt-4 font-semibold">Calendar link</h2><p className="mt-2 text-xs leading-relaxed text-white/38">It will arrive with the confirmed date so no placeholder event is added to your calendar.</p></div><div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"><MessageCircle size={19} className="text-[#bd84ff]" /><h2 className="mt-4 font-semibold">WhatsApp reminders</h2>{whatsappHref ? <a href={whatsappHref} className="text-link mt-3 text-white">Start the conversation</a> : <p className="mt-2 text-xs leading-relaxed text-white/38">The verified Diction WhatsApp link will be included in your confirmation when available.</p>}</div></div></div>
+    <div className="mx-auto max-w-4xl text-center"><div className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-white/14 bg-white/5 text-[#8db7ff]"><Check size={28} /></div><p className="section-label mt-8 text-[#8db7ff]">Your place is reserved</p><h1 className="editorial-title mx-auto mt-7 max-w-[10ch]">{registration.firstName ? `${registration.firstName}, you are on the path to being known.` : "You are on the path to being known."}</h1><p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-white/52 md:text-lg">Watch your inbox for the next live session schedule, confirmation details and toolkit access.</p><div className="mx-auto mt-10 grid max-w-2xl gap-4 text-left sm:grid-cols-2"><div className="rounded-[1.5rem] border border-white/13 bg-white/[0.035] p-6"><CalendarClock size={19} className="text-[#8db7ff]" /><h2 className="mt-5 font-semibold">Calendar link</h2><p className="mt-2 text-xs leading-relaxed text-white/42">It will arrive with the confirmed date so no placeholder event is added to your calendar.</p></div><div className="rounded-[1.5rem] border border-white/13 bg-white/[0.035] p-6"><MessageCircle size={19} className="text-[#8db7ff]" /><h2 className="mt-5 font-semibold">WhatsApp reminders</h2>{whatsappHref ? <a href={whatsappHref} className="mt-3 inline-flex text-sm font-semibold text-[#8db7ff]">Start the conversation</a> : <p className="mt-2 text-xs leading-relaxed text-white/42">The verified Diction WhatsApp link will be included in your confirmation when available.</p>}</div></div></div>
   );
 }
