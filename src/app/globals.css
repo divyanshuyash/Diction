@@ -9,6 +9,8 @@
 
 :root {
   --diction-purple: #a855f7;
+  --internal-page-max: 1240px;
+  --internal-page-gutter: clamp(1.25rem, 3.8vw, 2.5rem);
 }
 
 * { box-sizing: border-box; }
@@ -37,6 +39,56 @@ textarea { font: inherit; }
 .site-container {
   width: min(100% - 2.5rem, 1320px);
   margin-inline: auto;
+}
+
+/* Every non-home page uses the same content rail. The home experience has its
+   own full-viewport composition and is intentionally excluded with .h-svh. */
+main:not(.h-svh) {
+  --page-max: var(--internal-page-max);
+  --page-gutter: var(--internal-page-gutter);
+}
+
+main:not(.h-svh) .site-container {
+  width: min(calc(100% - (2 * var(--page-gutter))), var(--page-max));
+  max-width: var(--page-max);
+}
+
+main:not(.h-svh) .section-pad {
+  padding-inline: var(--page-gutter);
+}
+
+main:not(.h-svh) .section-pad > .mx-auto,
+main:not(.h-svh) > section > .mx-auto,
+main:not(.h-svh) > .section-pad > .mx-auto,
+main:not(.h-svh) > article > section > .mx-auto,
+main:not(.h-svh) > article > header > .site-container,
+main:not(.h-svh) > header > .site-container {
+  width: min(100%, var(--page-max));
+  max-width: var(--page-max);
+  margin-inline: auto;
+}
+
+main:not(.h-svh) > header > div,
+main:not(.h-svh) > footer > div {
+  max-width: var(--page-max);
+}
+
+main:not(.h-svh) > header,
+main:not(.h-svh) > footer {
+  padding-inline: var(--page-gutter);
+}
+
+/* Keep long-form reading measure intentionally narrow while its outer rail
+   remains aligned with every other internal page section. */
+main:not(.h-svh) .section-pad > .mx-auto.max-w-\[900px\],
+main:not(.h-svh) > .section-pad > .mx-auto.max-w-\[900px\],
+main:not(.h-svh) > article > section > .mx-auto.max-w-\[900px\] {
+  max-width: 900px;
+}
+
+main:not(.h-svh) .section-pad > .mx-auto.max-w-\[960px\],
+main:not(.h-svh) > .section-pad > .mx-auto.max-w-\[960px\] {
+  max-width: 960px;
 }
 
 .page-hero {
