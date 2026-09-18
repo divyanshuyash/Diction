@@ -5,6 +5,7 @@ export type AuditTool = {
   promise: string;
   description: string;
   checks: string[];
+  actions: string[];
   resultTitle: string;
   resultCopy: string;
   gap: string;
@@ -21,6 +22,16 @@ export const auditTools: Record<string, AuditTool> = {
     resultTitle: "Your positioning is a system of associations.",
     resultCopy: "The strongest message makes your expertise, audience and distinct perspective feel inseparable. KNOWN shows how that position connects to content, trust and opportunity.",
     gap: "People do not understand what I do",
+    actions: [
+      "Write a one-sentence introduction: I help [audience] solve [problem] through [approach]. Ask someone outside your business to explain it back.",
+      "Choose one primary audience and name it in your headline. Move secondary audiences into supporting copy.",
+      "Review three recent client conversations and replace internal jargon with the words clients use.",
+      "Describe one specific change your work helps create, with the conditions it depends on.",
+      "Write down one common approach you disagree with, why, and the alternative you recommend.",
+      "List your offers next to your core expertise. Clarify how each offer supports the same position.",
+      "Compare your website introduction and two main profiles. Align their audience, promise and expertise.",
+      "Introduce yourself through the problem you solve and a concrete example before mentioning your job title.",
+    ],
   },
   "authority-content-audit": {
     slug: "authority-content-audit",
@@ -32,6 +43,16 @@ export const auditTools: Record<string, AuditTool> = {
     resultTitle: "Authority content makes your thinking visible.",
     resultCopy: "Frequency cannot compensate for generic ideas. KNOWN helps you connect a clear position to content people can recognise and trust.",
     gap: "My content does not build authority",
+    actions: [
+      "Choose one common belief in your field and write a short response that explains your own view.",
+      "Add one concrete example, observation or sourced piece of evidence to your next post.",
+      "Pick three recurring topics that support your expertise and use them to plan your next six posts.",
+      "Read three posts aloud. Rewrite the generic phrases in words you would use with a client.",
+      "Answer one decision your audience is facing, including the tradeoff and when your advice applies.",
+      "Explain a common mistake, what causes it, and one practical alternative.",
+      "Teach through a real example you have permission to share, explaining the context and limits.",
+      "Add one relevant next step to your next piece: a related guide, diagnostic or conversation.",
+    ],
   },
   "website-trust-audit": {
     slug: "website-trust-audit",
@@ -43,6 +64,16 @@ export const auditTools: Record<string, AuditTool> = {
     resultTitle: "A trusted website reduces uncertainty.",
     resultCopy: "Design matters most when it supports clear positioning, credible proof and an obvious next step. KNOWN shows where the website sits inside the wider system.",
     gap: "My website does not create trust",
+    actions: [
+      "Show your first screen to someone for five seconds. Ask what you do, for whom, and what they would click.",
+      "Name your primary audience near the top of the page and describe a problem they recognise.",
+      "Pair one proof point with the problem, your contribution and a verified outcome or lesson.",
+      "Add a short explanation of how you approach the work, written in your own voice.",
+      "Order the page around four questions: Is this for me? What do I get? Why trust it? What next?",
+      "Review the strongest claim on your page and add supporting evidence or qualify the wording.",
+      "Choose one primary action for each key page and give its button a clear outcome-based label.",
+      "Test your main visitor journey on a phone. Fix any clipped text, small controls or confusing navigation.",
+    ],
   },
   "90-day-presence-roadmap": {
     slug: "90-day-presence-roadmap",
@@ -54,5 +85,15 @@ export const auditTools: Record<string, AuditTool> = {
     resultTitle: "Sequence creates momentum.",
     resultCopy: "The right next step depends on the gap currently limiting the whole system. KNOWN gives you the framework to make that choice with clarity.",
     gap: "I do not know what to build first",
+    actions: [
+      "Name the one point where people lose clarity or stop taking the next step. Make it the first priority.",
+      "Agree on your audience, problem and point of view before scheduling production work.",
+      "Choose a single audience for this quarter and list the questions it needs answered.",
+      "Select one expertise theme and outline four useful pieces around it.",
+      "Collect approved examples, testimonials and evidence in one shared proof library.",
+      "Choose the platform that already receives meaningful attention and fix its visitor journey first.",
+      "Match the next action to readiness: a useful diagnostic for new visitors, a conversation for those ready.",
+      "Plan three phases: clarify the foundation, publish and improve the experience, then review and refine.",
+    ],
   },
 };

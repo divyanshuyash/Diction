@@ -6,14 +6,14 @@ export default function DictionFramework({ compact = false }: { compact?: boolea
   return (
     <section className="section-pad bg-[#f1eee8] px-6 text-[#111] md:px-10">
       <div className="mx-auto max-w-[1240px]">
-        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
-          <div><p className="section-label text-[#7134cb]">The D.I.C.T.I.O.N. framework</p><h2 className="editorial-heading mt-7">Seven connected parts. One recognisable presence.</h2></div>
-          <p className="body-large max-w-xl text-black/52 lg:justify-self-end">A digital presence becomes useful when positioning, audience, content, trust, platforms, opportunities and relationships reinforce one another.</p>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="section-label text-[#7134cb]">The D.I.C.T.I.O.N. framework</p><h2 className="editorial-heading mx-auto mt-6">Seven connected parts. One recognisable presence.</h2>
+          <p className="body-large mx-auto mt-6 max-w-2xl text-black/52">A digital presence becomes useful when positioning, audience, content, trust, platforms, opportunities and relationships reinforce one another.</p>
         </div>
-        <div className="mt-16 border-t border-black/12">
+        <div className="mt-12 border-t border-black/12">
           {framework.slice(0, compact ? 4 : framework.length).map((item) => (
             <details key={`${item.letter}-${item.title}`} className="group border-b border-black/12">
-              <summary className="grid cursor-pointer list-none gap-5 py-6 [&::-webkit-details-marker]:hidden md:grid-cols-[72px_0.8fr_1.2fr] md:items-center md:py-8">
+              <summary className="framework-row grid cursor-pointer list-none gap-5 py-6 [&::-webkit-details-marker]:hidden md:grid-cols-[72px_0.8fr_1.2fr] md:items-center md:py-8">
                 <span className="text-3xl font-black text-[#7134cb]">{item.letter}</span>
                 <h3 className="text-xl font-semibold tracking-[-0.035em] md:text-2xl">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-black/50">{item.description}</p>
@@ -25,7 +25,7 @@ export default function DictionFramework({ compact = false }: { compact?: boolea
             </details>
           ))}
         </div>
-        {compact ? <Link href="/about#framework" className="button-dark mt-10">See how all seven parts work together <ArrowRight size={16} aria-hidden="true" /></Link> : <Link href="/tools/digital-presence-score" className="button-dark mt-10">Measure the seven parts <ArrowRight size={16} aria-hidden="true" /></Link>}
+        <div className="mt-10 text-center">{compact ? <Link href="/about#framework" className="button-dark">See how all seven parts work together <ArrowRight size={16} aria-hidden="true" /></Link> : <Link href="/tools/digital-presence-score" className="button-dark">Measure the seven parts <ArrowRight size={16} aria-hidden="true" /></Link>}</div>
       </div>
     </section>
   );

@@ -9,10 +9,10 @@ const columns = [
 
 export default function PageFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[#070707] px-6 py-14 text-white md:px-10 md:py-18">
+    <footer className="site-footer border-t border-white/10 bg-[#070707] px-6 py-14 text-white md:px-10 md:py-18">
       <div className="mx-auto grid max-w-[1320px] gap-14 lg:grid-cols-[1.3fr_0.7fr_0.7fr]">
         <div>
-          <Image src="/diction-wordmark.png" alt="Diction" width={2155} height={730} className="h-auto w-40 md:w-48" sizes="(min-width: 768px) 192px, 160px" />
+          <Link href="/" aria-label="Diction home" className="inline-block"><Image src="/diction-wordmark.png" alt="Diction" width={2155} height={730} className="footer-mark h-auto w-40 md:w-48" sizes="(min-width: 768px) 192px, 160px" /></Link>
           <p className="mt-5 max-w-md text-sm leading-relaxed text-white/44">A connected digital presence for founders and experts whose work deserves to be known.</p>
           <Link href="/register" className="text-link mt-8 text-white">Reserve a free seat <ArrowUpRight size={14} aria-hidden="true" /></Link>
         </div>

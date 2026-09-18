@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
+
+import QuestionStep from "./QuestionStep";
+import ResultPanel from "./ResultPanel";
 
 const dimensions = [
   { letter: "D", name: "Define positioning", weight: 15, gap: "People do not understand what I do", questions: ["A new visitor can explain what I should be known for.", "My point of view is distinct from generic category advice."] },
@@ -31,11 +33,22 @@ function stageFor(score: number) {
 }
 
 export default function ScoreAssessment() {
+  const quickWins = [
+    "Write one sentence that names your audience, their problem and your distinct approach. Test whether someone outside your business can explain it back.",
+    "Choose one primary audience and use three recent conversations to identify the problem and language that matter to them.",
+    "Publish one useful explanation of how you think, supported by an example and connected to your core expertise.",
+    "Choose one important claim and support it with an approved example, a clear context and credible evidence.",
+    "Compare your website and two main profiles. Align their introduction, visual identity and next action.",
+    "Choose one next action for your most visited page and make the button explain what the visitor will receive.",
+    "Create one helpful follow-up resource and a clear, consent-based way for interested people to stay in touch.",
+  ];
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[][]>(() => dimensions.map(() => [null, null]));
   const [finished, setFinished] = useState(false);
-  const current = dimensions[step];
-  const stepComplete = answers[step].every((answer) => answer !== null);
+  const dimensionIndex = Math.floor(step / 2);
+  const questionIndex = step % 2;
+  const current = dimensions[dimensionIndex];
+  const totalQuestions = dimensions.length * 2;
 
   const result = useMemo(() => {
     const scores = dimensions.map((dimension, index) => {
@@ -48,7 +61,7 @@ export default function ScoreAssessment() {
   }, [answers]);
 
   function answer(questionIndex: number, value: number) {
-    setAnswers((existing) => existing.map((dimension, index) => index === step ? dimension.map((answerValue, answerIndex) => answerIndex === questionIndex ? value : answerValue) : dimension));
+    setAnswers((existing) => existing.map((dimension, index) => index === dimensionIndex ? dimension.map((answerValue, answerIndex) => answerIndex === questionIndex ? value : answerValue) : dimension));
   }
 
   function restart() {
@@ -58,26 +71,31 @@ export default function ScoreAssessment() {
   }
 
   if (finished) {
-    const registerHref = `/register?source=digital-presence-score&score=${result.total}&gap=${encodeURIComponent(result.weakest.gap)}`;
+    const priorityIndex = dimensions.findIndex((item) => item.name === result.weakest.name);
     return (
-      <div className="rounded-[2rem] border border-white/12 bg-white/[0.035] p-6 md:p-10">
+      <ResultPanel>
         <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr]">
           <div><p className="section-label text-[#bd84ff]">Your directional score</p><div className="mt-7 flex items-end gap-3"><span className="text-[clamp(6rem,15vw,10rem)] font-black leading-none tracking-[-0.09em]">{result.total}</span><span className="pb-4 text-sm text-white/30">/ 100</span></div><p className="mt-5 text-2xl font-semibold">{result.stage.name}</p><p className="mt-3 text-sm leading-relaxed text-white/46">{result.stage.copy}</p></div>
           <div><p className="section-label text-white/28">Dimension breakdown</p><div className="mt-6 grid gap-3">{result.scores.map((item) => <div key={`${item.letter}-${item.name}`} className="grid grid-cols-[28px_1fr_42px] items-center gap-3"><span className="font-black text-[#bd84ff]">{item.letter}</span><div><div className="flex justify-between text-xs"><span>{item.name}</span></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-[#a855f7]" style={{ width: `${item.percentage}%` }} /></div></div><span className="text-right text-xs text-white/45">{item.percentage}</span></div>)}</div></div>
         </div>
-        <div className="mt-10 border-t border-white/10 pt-8"><p className="section-label text-white/28">The gap to address first</p><h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em]">{result.weakest.name}</h3><p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/48">Strengthening this dimension will make the rest of your presence work harder. Treat the score as a decision aid, not a scientific, competitive or permanent rating.</p><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Link href={registerHref} className="button-light">Build my 90-day roadmap <ArrowRight size={16} /></Link><button type="button" onClick={restart} className="button-ghost"><RotateCcw size={15} /> Retake assessment</button></div></div>
-      </div>
+          <div className="mt-10 border-t border-white/10 pt-8"><p className="section-label text-white/28">A useful place to focus</p><h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em]">{result.weakest.name}</h3><p className="mt-4 rounded-2xl border border-purple-300/20 bg-purple-400/5 p-5 text-sm leading-relaxed text-white/80">{quickWins[priorityIndex]}</p><button type="button" className="text-link mt-5" onClick={() => { setFinished(false); setStep(0); }}>Review my answers</button><p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/48">Strengthening this dimension will make the rest of your presence work harder. Treat the score as a decision aid, not a scientific, competitive or permanent rating.</p><button type="button" onClick={restart} className="button-ghost mt-8"><RotateCcw size={15} /> Retake assessment</button></div>
+      </ResultPanel>
     );
   }
 
   return (
-    <div className="rounded-[2rem] border border-white/12 bg-white/[0.035] p-6 md:p-10">
-      <div className="flex items-center justify-between gap-4"><p className="section-label text-[#bd84ff]">{current.letter} · {current.name}</p><span className="text-xs text-white/30">{step + 1} / {dimensions.length}</span></div>
-      <div className="mt-5 h-1 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-[#a855f7] transition-[width]" style={{ width: `${((step + 1) / dimensions.length) * 100}%` }} /></div>
-      <div className="mt-9 grid gap-8">
-        {current.questions.map((question, questionIndex) => <fieldset key={question}><legend className="text-lg font-semibold leading-snug tracking-[-0.025em]">{question}</legend><div className="mt-4 grid gap-2 sm:grid-cols-5">{options.map((option) => <label key={option.value} className="cursor-pointer rounded-xl border border-white/10 p-3 text-center text-[10px] font-bold uppercase tracking-[0.08em] text-white/42 transition-colors has-[:checked]:border-[#a855f7] has-[:checked]:bg-[#a855f7]/12 has-[:checked]:text-white"><input className="sr-only" type="radio" name={`step-${step}-question-${questionIndex}`} checked={answers[step][questionIndex] === option.value} onChange={() => answer(questionIndex, option.value)} />{option.label}</label>)}</div></fieldset>)}
-      </div>
-      <div className="mt-10 flex items-center justify-between gap-3"><button type="button" onClick={() => setStep((value) => Math.max(0, value - 1))} disabled={step === 0} className="button-ghost disabled:cursor-not-allowed disabled:opacity-30"><ArrowLeft size={15} /> Previous</button>{step < dimensions.length - 1 ? <button type="button" disabled={!stepComplete} onClick={() => setStep((value) => value + 1)} className="button-light disabled:cursor-not-allowed disabled:opacity-35">Next dimension <ArrowRight size={15} /></button> : <button type="button" disabled={!stepComplete} onClick={() => setFinished(true)} className="button-light disabled:cursor-not-allowed disabled:opacity-35">See my score <ArrowRight size={15} /></button>}</div>
-    </div>
+    <QuestionStep
+      index={step} total={totalQuestions} category={current.name}
+      question={current.questions[questionIndex]} options={options}
+      value={answers[dimensionIndex][questionIndex]}
+      onAnswer={(value) => answer(questionIndex, value)}
+      onBack={() => setStep((value) => Math.max(0, value - 1))}
+      onNext={() => {
+        if (answers[dimensionIndex][questionIndex] === null) return;
+        if (step < totalQuestions - 1) setStep(step + 1);
+        else if (answers.every((dimension) => dimension.every((value) => value !== null))) setFinished(true);
+      }}
+      finishLabel="See my score"
+    />
   );
 }

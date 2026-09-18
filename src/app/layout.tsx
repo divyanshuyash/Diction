@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { headers } from "next/headers";
+import PanelHost from "@/components/PanelHost";
 import "./globals.css";
 
 const inter = Inter({
@@ -47,6 +48,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full font-sans`}>
       <body className="relative flex min-h-full flex-col bg-background text-foreground antialiased selection:bg-accent selection:text-white">
         {children}
+        <PanelHost />
       </body>
     </html>
   );
