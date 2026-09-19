@@ -13,10 +13,11 @@ export default function DictionFramework({ compact = false }: { compact?: boolea
         <div className="mt-12 border-t border-black/12">
           {framework.slice(0, compact ? 4 : framework.length).map((item) => (
             <details key={`${item.letter}-${item.title}`} className="group border-b border-black/12">
-              <summary className="framework-row grid cursor-pointer list-none gap-5 py-6 [&::-webkit-details-marker]:hidden md:grid-cols-[72px_0.8fr_1.2fr] md:items-center md:py-8">
+              <summary className="framework-row grid cursor-pointer list-none gap-5 py-6 [&::-webkit-details-marker]:hidden md:grid-cols-[72px_0.8fr_1.2fr_2rem] md:items-center md:py-8">
                 <span className="text-3xl font-black text-[#7134cb]">{item.letter}</span>
                 <h3 className="text-xl font-semibold tracking-[-0.035em] md:text-2xl">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-black/50">{item.description}</p>
+                <span className="framework-toggle" aria-hidden="true" />
               </summary>
               <div className="grid gap-6 pb-7 pl-0 text-sm md:grid-cols-2 md:pl-[calc(72px+1.25rem)]">
                 <div className="border-l-2 border-[#a855f7] pl-4"><p className="section-label text-black/35">Question</p><p className="mt-2 leading-relaxed text-black/66">{item.question}</p></div>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   MotionConfig,
   motion,
@@ -14,6 +15,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowRight, Menu, X } from "lucide-react";
+import PageHeader from "./PageHeader";
 import Preloader from "./Preloader";
 
 const GlobeCanvas = dynamic(() => import("./GlobeCanvas"), {
@@ -29,6 +31,7 @@ const heroNavigation = [
 ];
 
 export default function AnimatedHero() {
+  const router = useRouter();
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [globeActive, setGlobeActive] = useState(true);
@@ -38,7 +41,14 @@ export default function AnimatedHero() {
   const globeActiveRef = useRef(true);
   const touchY = useRef<number | null>(null);
   const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const knownNavigationArmed = useRef(false);
+  const knownNavigationStarted = useRef(false);
   const finishLoading = useCallback(() => setLoadingComplete(true), []);
+  const enterKnown = useCallback(() => {
+    if (knownNavigationStarted.current) return;
+    knownNavigationStarted.current = true;
+    router.push("/known");
+  }, [router]);
   const progress = useSpring(rawProgress, {
     stiffness: shouldReduceMotion ? 1000 : 72,
     damping: shouldReduceMotion ? 100 : 24,
@@ -47,35 +57,51 @@ export default function AnimatedHero() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    router.prefetch("/known");
+  }, [router]);
 
   useMotionValueEvent(progress, "change", (value) => {
     const nextGlobeActive = value < 0.72;
-    if (nextGlobeActive === globeActiveRef.current) return;
+    if (nextGlobeActive !== globeActiveRef.current) {
+      globeActiveRef.current = nextGlobeActive;
+      setGlobeActive(nextGlobeActive);
+      if (nextGlobeActive) setMenuOpen(false);
+    }
 
-    globeActiveRef.current = nextGlobeActive;
-    setGlobeActive(nextGlobeActive);
-    if (nextGlobeActive) setMenuOpen(false);
+    if (value >= 1.965 && knownNavigationArmed.current) enterKnown();
   });
 
   useEffect(() => {
     if (!loadingComplete) return;
 
     const moveProgress = (amount: number) => {
-      const next = Math.min(1, Math.max(0, progressTarget.current + amount));
+      const next = Math.min(2, Math.max(0, progressTarget.current + amount));
       progressTarget.current = next;
       rawProgress.set(next);
 
       if (settleTimer.current) clearTimeout(settleTimer.current);
       settleTimer.current = setTimeout(() => {
         const current = progressTarget.current;
-        const settled = current < 0.035 ? 0 : current > 0.965 ? 1 : current;
+        const settled =
+          current < 0.035
+            ? 0
+            : Math.abs(current - 1) < 0.035
+              ? 1
+              : current > 1.965
+                ? 2
+                : current;
         progressTarget.current = settled;
         rawProgress.set(settled);
+        if (settled === 2) {
+          knownNavigationArmed.current = true;
+          if (progress.get() >= 1.965) enterKnown();
+        }
       }, 180);
     };
 
     const handleWheel = (event: WheelEvent) => {
+      if (event.target instanceof Element && event.target.closest(".route-overlay")) return;
+
       const pixelDelta =
         event.deltaMode === WheelEvent.DOM_DELTA_LINE
           ? event.deltaY * 16
@@ -87,7 +113,7 @@ export default function AnimatedHero() {
 
       const shouldControlReveal =
         window.scrollY <= 1 &&
-        (progressTarget.current < 0.999 || controlledDelta < 0);
+        (progressTarget.current < 1.999 || controlledDelta < 0);
       if (!shouldControlReveal) return;
 
       event.preventDefault();
@@ -95,10 +121,16 @@ export default function AnimatedHero() {
     };
 
     const handleTouchStart = (event: TouchEvent) => {
+      if (event.target instanceof Element && event.target.closest(".route-overlay")) {
+        touchY.current = null;
+        return;
+      }
       touchY.current = event.touches[0]?.clientY ?? null;
     };
 
     const handleTouchMove = (event: TouchEvent) => {
+      if (event.target instanceof Element && event.target.closest(".route-overlay")) return;
+
       const currentY = event.touches[0]?.clientY;
       if (touchY.current === null || currentY === undefined) return;
 
@@ -106,7 +138,7 @@ export default function AnimatedHero() {
       const controlledDelta = Math.min(0.08, Math.max(-0.08, touchDelta));
       const shouldControlReveal =
         window.scrollY <= 1 &&
-        (progressTarget.current < 0.999 || controlledDelta < 0);
+        (progressTarget.current < 1.999 || controlledDelta < 0);
 
       if (shouldControlReveal) {
         event.preventDefault();
@@ -120,6 +152,8 @@ export default function AnimatedHero() {
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (document.querySelector(".route-overlay")) return;
+
       const target = event.target;
       if (target instanceof HTMLElement && target.closest("a, button, input, textarea, select")) return;
 
@@ -137,7 +171,7 @@ export default function AnimatedHero() {
 
       const shouldControlReveal =
         window.scrollY <= 1 &&
-        (progressTarget.current < 0.999 || increment < 0);
+        (progressTarget.current < 1.999 || increment < 0);
       if (!shouldControlReveal) return;
 
       event.preventDefault();
@@ -158,7 +192,7 @@ export default function AnimatedHero() {
       window.removeEventListener("keydown", handleKeyDown);
       if (settleTimer.current) clearTimeout(settleTimer.current);
     };
-  }, [loadingComplete, rawProgress]);
+  }, [enterKnown, loadingComplete, progress, rawProgress]);
 
   const globeOpacity = useTransform(progress, [0, 0.34, 0.62], [1, 1, 0]);
   const globeScale = useTransform(progress, [0, 0.25, 0.7], [1, 1, 3.6]);
@@ -166,7 +200,7 @@ export default function AnimatedHero() {
   const wordmarkScale = useTransform(progress, [0, 0.2, 0.58], [1, 1, 1.55]);
   const midpointOpacity = useTransform(progress, [0.16, 0.34, 0.6, 0.8], [0, 1, 1, 0]);
   const recognitionProgress = useTransform(progress, [0.2, 0.68], [0, 1]);
-  const heroBackground = useTransform(progress, [0.34, 0.66], [0, 1]);
+  const heroBackground = useTransform(progress, [0.34, 0.66, 1.18, 1.58], [0, 1, 1, 0]);
   const heroReveal = useTransform(
     progress,
     [0.34, 0.74],
@@ -181,14 +215,25 @@ export default function AnimatedHero() {
   const titleScale = useTransform(progress, [0.44, 1], [0.84, 1]);
   const foregroundY = useTransform(progress, [0.46, 1], [150, 0]);
   const foregroundScale = useTransform(progress, [0.46, 1], [1.06, 1]);
-  const heroOpacity = useTransform(progress, [0.66, 0.86], [0, 1]);
+  const homeSceneScale = useTransform(progress, [1, 1.72], [1, 3.35]);
+  const heroOpacity = useTransform(progress, [0.66, 0.86, 1.08, 1.4], [0, 1, 1, 0]);
   const heroY = useTransform(progress, [0.66, 0.86], [28, 0]);
   const heroVisibility = useTransform(progress, (value) =>
-    value >= 0.42 ? "visible" : "hidden",
+    value >= 0.42 && value < 1.62 ? "visible" : "hidden",
   );
   const heroPointerEvents = useTransform(progress, (value) =>
-    value >= 0.84 ? "auto" : "none",
+    value >= 0.84 && value < 1.08 ? "auto" : "none",
   );
+  const continueOpacity = useTransform(progress, [0.82, 0.94, 1.08, 1.22], [0, 1, 1, 0]);
+  const knownSceneOpacity = useTransform(progress, [1.04, 1.3, 2], [0, 1, 1]);
+  const knownSceneReveal = useTransform(
+    progress,
+    [1.04, 1.68],
+    ["circle(0% at 50% 50%)", "circle(145% at 50% 50%)"],
+  );
+  const knownImageScale = useTransform(progress, [1.04, 1.9], [1.14, 1]);
+  const knownCopyOpacity = useTransform(progress, [1.28, 1.7], [0, 1]);
+  const knownCopyY = useTransform(progress, [1.22, 1.78], [72, 0]);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -259,6 +304,7 @@ export default function AnimatedHero() {
           style={{
             opacity: heroBackground,
             clipPath: shouldReduceMotion ? "none" : heroReveal,
+            scale: shouldReduceMotion ? 1 : homeSceneScale,
             visibility: heroVisibility,
           }}
         >
@@ -435,7 +481,14 @@ export default function AnimatedHero() {
               )}
             </header>
 
-            <div className="absolute inset-x-0 bottom-0 flex justify-end px-5 pb-[max(1.35rem,env(safe-area-inset-bottom))] sm:px-7 sm:pb-7 md:px-10 md:pb-9 lg:px-12 lg:pb-10">
+            <div className="absolute inset-x-0 bottom-0 flex flex-col items-end gap-3 px-5 pb-[max(1.35rem,env(safe-area-inset-bottom))] sm:px-7 sm:pb-7 md:px-10 md:pb-9 lg:px-12 lg:pb-10">
+              <motion.p
+                className="flex items-center gap-2.5 text-[0.5rem] font-bold uppercase tracking-[0.16em] text-white/52 sm:gap-3 sm:text-[0.56rem] sm:tracking-[0.18em]"
+                style={{ opacity: continueOpacity }}
+              >
+                <span className="h-px w-8 bg-white/35" aria-hidden="true" />
+                Scroll again to enter KNOWN
+              </motion.p>
               <div className="flex max-w-full flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
                 <Link href="/register" className="button-light min-h-11 max-w-full px-4 text-center text-[0.54rem] sm:min-h-12 sm:px-5 sm:text-[0.62rem]">
                   Join the Free KNOWN Masterclass <ArrowRight size={15} aria-hidden="true" />
@@ -443,6 +496,63 @@ export default function AnimatedHero() {
                 <Link href="/tools/digital-presence-score" className="button-ghost min-h-11 max-w-full px-4 text-center text-[0.54rem] sm:min-h-12 sm:px-5 sm:text-[0.62rem]">
                   Discover My Digital Presence Score
                 </Link>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-[70] overflow-hidden bg-[#09090a] text-white"
+          style={{
+            opacity: knownSceneOpacity,
+            clipPath: shouldReduceMotion ? "none" : knownSceneReveal,
+          }}
+          aria-hidden="true"
+          inert
+        >
+          <motion.div
+            className="absolute inset-0"
+            style={{ scale: shouldReduceMotion ? 1 : knownImageScale }}
+            aria-hidden="true"
+          >
+            <Image
+              src="/known-masterclass-portrait.png"
+              alt=""
+              fill
+              priority
+              className="object-cover object-[72%_34%]"
+              sizes="100vw"
+            />
+          </motion.div>
+          <div
+            className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,8,9,0.96)_0%,rgba(8,8,9,0.84)_42%,rgba(8,8,9,0.2)_78%,rgba(8,8,9,0.34)_100%),linear-gradient(180deg,rgba(8,8,9,0.24)_0%,rgba(8,8,9,0.54)_100%)]"
+            aria-hidden="true"
+          />
+
+          <div className="absolute inset-x-0 top-0 z-20">
+            <PageHeader />
+          </div>
+
+          <motion.div
+            className="relative z-10 mx-auto flex h-full w-full max-w-[1320px] items-center px-5 pt-[4.5rem] sm:px-7 md:px-10 lg:px-12"
+            style={{ opacity: knownCopyOpacity, y: shouldReduceMotion ? 0 : knownCopyY }}
+          >
+            <div className="max-w-[48rem]">
+              <p className="flex items-center gap-3 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#c59be9]">
+                <span className="h-px w-8 bg-current" aria-hidden="true" />
+                KNOWN · Free live masterclass
+              </p>
+              <h2 className="mt-5 max-w-[16ch] text-[clamp(2.5rem,4.5vw,4.5rem)] font-bold leading-[1.04] tracking-[-0.05em]">
+                Become known for the work only you can do.
+              </h2>
+              <p className="mt-6 max-w-[40rem] text-[clamp(0.95rem,1.5vw,1.2rem)] leading-relaxed text-white/68">
+                A practical, live class for founders and experts who want to turn credible expertise into clear positioning, trusted recognition and better opportunities—without chasing every platform.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/known#register" className="button-light">
+                  Reserve my free seat <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+                <Link href="/tools" className="button-ghost">Explore the free tools</Link>
               </div>
             </div>
           </motion.div>

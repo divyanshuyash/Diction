@@ -10,9 +10,9 @@ import { insights } from "@/lib/siteContent";
 export const metadata: Metadata = { title: "Insights", description: "Practical thinking on positioning, authority, trust, websites and AI-era digital presence." };
 
 const coverThemes = [
-  { kicker: "Field note 01", coverTitle: "Seen ≠ remembered", palette: "from-[#170d22] via-[#4b2476] to-[#9e5ae9]" },
-  { kicker: "Field note 02", coverTitle: "Position before output", palette: "from-[#101011] via-[#252528] to-[#5d5d63]" },
-  { kicker: "Field note 03", coverTitle: "Trust is the scarce asset", palette: "from-[#26102c] via-[#7134cb] to-[#d58eff]" },
+  { kicker: "Field note 01", coverTitle: "Seen ≠ remembered", palette: "bg-[#1a1320] text-white", accent: "bg-[#a467db]" },
+  { kicker: "Field note 02", coverTitle: "Position before output", palette: "bg-[#ded8ce] text-[#151515]", accent: "bg-[#151515]" },
+  { kicker: "Field note 03", coverTitle: "Trust is the scarce asset", palette: "bg-[#7d42b5] text-white", accent: "bg-white" },
 ] as const;
 
 function InsightCard({ insight, index }: { insight: (typeof insights)[number]; index: number }) {
@@ -20,13 +20,12 @@ function InsightCard({ insight, index }: { insight: (typeof insights)[number]; i
   const number = String(index + 1).padStart(2, "0");
 
   return (
-    <Link href={`/insights/${insight.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-black/10 bg-[#fbf9f4] shadow-[0_1.2rem_3rem_rgba(17,17,17,0.06)] transition-[transform,box-shadow] hover:-translate-y-1 hover:shadow-[0_1.6rem_4rem_rgba(41,15,64,0.16)]">
-      <div className={`relative min-h-64 overflow-hidden bg-gradient-to-br p-7 text-white ${theme.palette}`}>
-        <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.65)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.65)_1px,transparent_1px)] [background-size:42px_42px]" aria-hidden="true" />
-        <div className="absolute -bottom-16 -right-10 size-56 rounded-full border border-white/30" aria-hidden="true" />
-        <div className="absolute bottom-7 right-7 h-1 w-16 bg-white/80" aria-hidden="true" />
+    <Link href={`/insights/${insight.slug}`} className="insight-card group flex h-full flex-col overflow-hidden border border-black/12 bg-[#f9f6f0] transition-[transform,box-shadow] hover:-translate-y-1">
+      <div className={`insight-cover relative min-h-64 overflow-hidden p-7 ${theme.palette}`}>
+        <div className="absolute right-5 top-1/2 -translate-y-1/2 text-[11rem] font-black leading-none tracking-[-0.12em] opacity-[0.06]" aria-hidden="true">D</div>
+        <div className={`absolute bottom-7 right-7 h-1 w-16 ${theme.accent}`} aria-hidden="true" />
         <div className="relative flex h-full min-h-48 flex-col justify-between">
-          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.16em] text-white/70"><span>{theme.kicker}</span><span>{number}</span></div>
+          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.16em] opacity-65"><span>Diction / {theme.kicker}</span><span>{number}</span></div>
           <h3 className="max-w-[10ch] text-[clamp(2rem,3vw,2.7rem)] font-semibold leading-[0.92] tracking-[-0.06em]">{theme.coverTitle}</h3>
         </div>
       </div>
