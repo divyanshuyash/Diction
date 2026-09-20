@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import RoutePanel from "@/components/RoutePanel";
 import { capabilitiesPanelItems } from "@/lib/panelContent";
 
-export const metadata: Metadata = { title: "Capabilities", description: "See what Diction can help implement after the strategy is clear—without packages, menus or disconnected deliverables." };
+export const metadata: Metadata = { title: "Capabilities", description: "See what Diction can help implement after the strategy is clear without packages, menus or disconnected deliverables." };
 
 export default function CapabilitiesPage() {
   return (

@@ -546,7 +546,7 @@ export default function AnimatedHero() {
                 Become known for the work only you can do.
               </h2>
               <p className="mt-6 max-w-[40rem] text-[clamp(0.95rem,1.5vw,1.2rem)] leading-relaxed text-white/68">
-                A practical, live class for founders and experts who want to turn credible expertise into clear positioning, trusted recognition and better opportunities—without chasing every platform.
+                A practical, live class for founders and experts who want to turn credible expertise into clear positioning, trusted recognition and better opportunities without chasing every platform.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/known#register" className="button-light">

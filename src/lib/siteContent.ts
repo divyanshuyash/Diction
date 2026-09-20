@@ -124,9 +124,8 @@ export const insights = [
   {
     slug: "ai-made-content-easy-trust-harder",
     category: "AI-era visibility",
-    title: "AI made content easier—and trust more valuable",
+    title: "AI made content easier. Trust is more valuable.",
     excerpt: "When polished information is abundant, lived evidence, original judgment and a recognisable voice become the differentiators.",
     readTime: "7 min read",
   },
 ] as const;
-

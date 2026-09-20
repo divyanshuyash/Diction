@@ -13,6 +13,6 @@ Open [http://localhost:3000](http://localhost:3000). The loading screen opens in
 
 Primary routes:
 
-- `/` — loading screen, globe intro and hero
-- `/known` — KNOWN masterclass and registration
-- `/thank-you` — registration confirmation and WhatsApp reminder handoff
+- `/`: loading screen, globe intro and hero
+- `/known`: KNOWN masterclass and registration
+- `/thank-you`: registration confirmation and WhatsApp reminder handoff

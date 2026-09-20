@@ -10,9 +10,9 @@ export function toolMetadata(tool: AuditTool): Metadata {
 
 export default function ToolLandingPage({ tool }: { tool: AuditTool }) {
   return (
-    <RoutePanel backHref="/tools" eyebrow={tool.eyebrow} title={tool.title} description={tool.description}>
+    <RoutePanel backHref="/tools" eyebrow={tool.eyebrow} title={tool.title} description={tool.description} wideTextLayout>
       <div className="route-panel-purpose"><CheckCircle2 size={18} aria-hidden="true" /><p>{tool.promise}</p></div>
-      <div className="route-panel-task"><MiniAudit title={tool.eyebrow} checks={tool.checks} actions={tool.actions} /></div>
+      <div className="route-panel-task"><MiniAudit tool={tool} /></div>
     </RoutePanel>
   );
 }

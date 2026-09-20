@@ -38,7 +38,7 @@ export default function SuccessStoriesPage() {
       <PageIntro
         eyebrow="Success stories"
         title="What changes when the system connects."
-        description="Diction evaluates progress through clarity, recognition, trust and better opportunity pathways—not through isolated deliverables or attention metrics alone."
+        description="Diction evaluates progress through clarity, recognition, trust and better opportunity pathways. It does not measure isolated deliverables or attention metrics alone."
         primary={{ label: "See the process", href: "#stories" }}
         secondary={{ label: "Explore capabilities", href: "/capabilities" }}
         backgroundImage={{ src: "/hero-success-stories-founder.png", alt: "Founder in conversation at an event" }}
@@ -92,7 +92,7 @@ export default function SuccessStoriesPage() {
         </div>
       </section>
 
-      <CallToAction title="Your gap should determine the work—not the other way around." body="Use the Digital Presence Score to identify the part of your system that needs attention first." href="/tools/digital-presence-score" label="Discover my score" />
+      <CallToAction title="Your gap should determine the work. Not the other way around." body="Use the Digital Presence Score to identify the part of your system that needs attention first." href="/tools/digital-presence-score" label="Discover my score" />
       <PageFooter />
     </main>
   );

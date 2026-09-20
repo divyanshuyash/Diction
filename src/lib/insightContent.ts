@@ -13,7 +13,7 @@ export const insightArticles: Record<string, InsightArticle> = {
     slug: "from-visible-to-recognised",
     category: "From expert to known",
     title: "Visibility is not the same as recognition",
-    standfirst: "Being seen is a distribution outcome. Being remembered for the right idea is a positioning outcome—and the difference changes what you should build.",
+    standfirst: "Being seen is a distribution outcome. Being remembered for the right idea is a positioning outcome. The difference changes what you should build.",
     readTime: "5 min read",
     sections: [
       { heading: "Visibility answers only one question", paragraphs: ["Visibility tells you whether someone had the chance to encounter your work. It does not tell you what they understood, remembered or trusted after the encounter.", "That is why more reach can leave a credible expert with the same commercial problem: people have seen the name, but cannot connect it to a clear expertise, point of view or next step."] },
@@ -38,7 +38,7 @@ export const insightArticles: Record<string, InsightArticle> = {
   "ai-made-content-easy-trust-harder": {
     slug: "ai-made-content-easy-trust-harder",
     category: "AI-era visibility",
-    title: "AI made content easier—and trust more valuable",
+    title: "AI made content easier. Trust is more valuable.",
     standfirst: "When polished information is abundant, lived evidence, original judgment and a recognisable voice become the differentiators.",
     readTime: "7 min read",
     sections: [

@@ -88,7 +88,7 @@ export default function KnownPage() {
               One clear system. Three useful decisions.
             </h2>
             <p className="body-large mx-auto mt-7 max-w-2xl text-black/52">
-              No platform tricks or inflated promises—just a sharper way to make your expertise
+              No platform tricks or inflated promises. Just a sharper way to make your expertise
               easier to understand, trust and remember.
             </p>
           </div>

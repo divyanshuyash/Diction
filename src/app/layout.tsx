@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 import PanelHost from "@/components/PanelHost";
+import SiteExperience from "@/components/SiteExperience";
 import "./globals.css";
 
 const inter = Inter({
@@ -28,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "Your expertise deserves more than visibility. It deserves recognition.",
       type: "website",
       url: origin,
-      images: [{ url: socialImage, width: 1200, height: 630, alt: "Diction — For Founders Who Deserve to Be Known" }],
+      images: [{ url: socialImage, width: 1200, height: 630, alt: "Diction: For Founders Who Deserve to Be Known" }],
     },
     twitter: {
       card: "summary_large_image",
@@ -48,6 +49,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full font-sans`}>
       <body className="relative flex min-h-full flex-col bg-background text-foreground antialiased selection:bg-accent selection:text-white">
         {children}
+        <SiteExperience />
         <PanelHost />
       </body>
     </html>

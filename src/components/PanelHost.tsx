@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import MiniAudit from "@/components/MiniAudit";
 import RoutePanel from "@/components/RoutePanel";
@@ -19,6 +19,7 @@ const panelPaths = new Set([
 
 export default function PanelHost() {
   const [panelPath, setPanelPath] = useState<string | null>(null);
+  const returnFocusTo = useRef<HTMLElement | null>(null);
 
   const openPanel = useCallback((path: string) => {
     setPanelPath(path);
@@ -45,6 +46,7 @@ export default function PanelHost() {
       if (target.origin !== window.location.origin || !panelPaths.has(target.pathname)) return;
 
       event.preventDefault();
+      returnFocusTo.current = link;
       openPanel(target.pathname);
     };
     const dismissOnHistoryChange = () => {
@@ -63,16 +65,34 @@ export default function PanelHost() {
   useEffect(() => {
     if (!panelPath) return;
     const previousOverflow = document.body.style.overflow;
+    const page = document.querySelector<HTMLElement>("main");
+    const pageWasInert = page?.hasAttribute("inert") ?? false;
+    const returnControl = document.querySelector<HTMLElement>(".site-return-top");
+    const returnControlWasInert = returnControl?.hasAttribute("inert") ?? false;
+    const previousReturnAria = returnControl?.getAttribute("aria-hidden") ?? null;
     const dismissOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") closePanel();
     };
     document.body.style.overflow = "hidden";
+    page?.setAttribute("inert", "");
+    returnControl?.setAttribute("inert", "");
+    returnControl?.setAttribute("aria-hidden", "true");
     document.addEventListener("keydown", dismissOnEscape);
     return () => {
       document.body.style.overflow = previousOverflow;
+      if (!pageWasInert) page?.removeAttribute("inert");
+      if (!returnControlWasInert) returnControl?.removeAttribute("inert");
+      if (previousReturnAria === null) returnControl?.removeAttribute("aria-hidden");
+      else returnControl?.setAttribute("aria-hidden", previousReturnAria);
       document.removeEventListener("keydown", dismissOnEscape);
     };
   }, [closePanel, panelPath]);
+
+  useEffect(() => {
+    if (panelPath || !returnFocusTo.current) return;
+    returnFocusTo.current.focus();
+    returnFocusTo.current = null;
+  }, [panelPath]);
 
   if (!panelPath) return null;
 
@@ -119,9 +139,9 @@ export default function PanelHost() {
   if (!tool) return null;
 
   return (
-    <RoutePanel overlay onClose={closePanel} backHref="/tools" eyebrow={tool.eyebrow} title={tool.title} description={tool.description}>
+    <RoutePanel overlay onClose={closePanel} backHref="/tools" eyebrow={tool.eyebrow} title={tool.title} description={tool.description} wideTextLayout>
       <div className="route-panel-purpose"><CheckCircle2 size={18} aria-hidden="true" /><p>{tool.promise}</p></div>
-      <div className="route-panel-task"><MiniAudit title={tool.eyebrow} checks={tool.checks} actions={tool.actions} /></div>
+      <div className="route-panel-task"><MiniAudit tool={tool} /></div>
     </RoutePanel>
   );
 }
