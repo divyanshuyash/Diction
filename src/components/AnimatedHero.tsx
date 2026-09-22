@@ -26,7 +26,6 @@ const heroNavigation = [
   { label: "Home", href: "/" },
   { label: "Free Tools", href: "/tools" },
   { label: "Success Stories", href: "/success-stories" },
-  { label: "Insights", href: "/insights" },
   { label: "About", href: "/about" },
 ];
 

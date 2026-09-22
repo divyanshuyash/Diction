@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, LockKeyhole } from "lucide-react";
 export default function RegistrationForm({ defaultGap = "", source = "KNOWN masterclass", score }: { defaultGap?: string; source?: string; score?: string }) {
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const previousStep = useRef(step);
@@ -18,7 +19,7 @@ export default function RegistrationForm({ defaultGap = "", source = "KNOWN mast
   }, [step]);
   const stepLabels = ["Your name", "Your email", "Your role", "Your goal", "Your biggest gap", "Your session", "Confirm your registration"];
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const active = event.currentTarget.querySelector('[data-active-step="true"]');
     const fields = active?.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input, select");
@@ -38,18 +39,31 @@ export default function RegistrationForm({ defaultGap = "", source = "KNOWN mast
     }
 
     const registration = Object.fromEntries(form.entries());
+    setIsSubmitting(true);
     try {
+      const response = await fetch("/api/known-registration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registration),
+      });
+      const result = await response.json().catch(() => null) as { message?: string } | null;
+      if (!response.ok) {
+        setError(result?.message ?? "We could not save your registration. Please try again shortly.");
+        return;
+      }
       sessionStorage.setItem("diction-known-registration", JSON.stringify(registration));
     } catch {
-      setError("Your browser could not save these details. Allow browser storage and try again.");
+      setError("We could not save your registration. Please try again shortly.");
       return;
+    } finally {
+      setIsSubmitting(false);
     }
     router.push("/thank-you");
   }
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className="grid gap-5">
-      <p className="rounded-xl border border-purple-300/20 bg-purple-400/5 p-4 text-sm leading-relaxed text-white/70">Registration preview: your details are saved in this tab only. A seat is not booked and no email is sent yet.</p>
+      <p className="rounded-xl border border-purple-300/20 bg-purple-400/5 p-4 text-sm leading-relaxed text-white/70">Complete the form to reserve your place. Your details will be securely added to Diction&apos;s registration list.</p>
       <p className="text-xs text-[#bd84ff]" aria-live="polite">Step {step + 1} of {stepLabels.length} · {stepLabels[step]}</p>
       <progress className="question-progress" value={step + 1} max={stepLabels.length} aria-label="Registration progress" />
       <input type="hidden" name="source" value={source} />
@@ -69,9 +83,9 @@ export default function RegistrationForm({ defaultGap = "", source = "KNOWN mast
       {error ? <p role="alert" className="rounded-xl border border-red-400/25 bg-red-400/8 px-4 py-3 text-sm text-red-200">{error}</p> : null}
       <div className="question-controls flex items-center justify-between gap-3">
         <button type="button" disabled={step === 0} onClick={() => { setStep(step - 1); setError(""); }} className="button-ghost disabled:opacity-30"><ArrowLeft size={15} /> Back</button>
-        <button type="submit" className="button-light">{step === stepLabels.length - 1 ? "Save my details" : "Next"} <ArrowRight size={17} aria-hidden="true" /></button>
+        <button type="submit" disabled={isSubmitting} className="button-light disabled:cursor-wait disabled:opacity-70">{step === stepLabels.length - 1 ? (isSubmitting ? "Reserving your place…" : "Reserve my place") : "Next"} <ArrowRight size={17} aria-hidden="true" /></button>
       </div>
-      <p className="flex items-center justify-center gap-2 text-center text-xs leading-relaxed text-white/50"><LockKeyhole size={12} aria-hidden="true" /> Stored in this browser tab. Not sent to Diction.</p>
+      <p className="flex items-center justify-center gap-2 text-center text-xs leading-relaxed text-white/50"><LockKeyhole size={12} aria-hidden="true" /> Your details are sent securely to Diction for registration and session updates.</p>
     </form>
   );
 }

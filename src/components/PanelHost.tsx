@@ -5,6 +5,7 @@ import { CheckCircle2 } from "lucide-react";
 import MiniAudit from "@/components/MiniAudit";
 import RoutePanel from "@/components/RoutePanel";
 import ScoreAssessment from "@/components/ScoreAssessment";
+import QuickReadDeck from "@/components/QuickReadDeck";
 import { insightArticles } from "@/lib/insightContent";
 import { capabilitiesPanelItems, collectiveKitItems } from "@/lib/panelContent";
 import { auditTools } from "@/lib/toolContent";
@@ -127,10 +128,8 @@ export default function PanelHost() {
   const article = insightArticles[panelPath.replace("/insights/", "")];
   if (article) {
     return (
-      <RoutePanel overlay onClose={closePanel} backHref="/insights" eyebrow={`${article.category} · ${article.readTime}`} title={article.title} description={article.standfirst}>
-        <article className="route-panel-reading">
-          {article.sections.map((section) => <section key={section.heading}><h2>{section.heading}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}{section.points ? <ul>{section.points.map((point) => <li key={point}>{point}</li>)}</ul> : null}</section>)}
-        </article>
+      <RoutePanel overlay onClose={closePanel} backHref="/tools" eyebrow={`${article.category} · ${article.readTime}`} title={article.title} description={article.standfirst}>
+        <QuickReadDeck article={article} />
       </RoutePanel>
     );
   }

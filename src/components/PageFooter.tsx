@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 const columns = [
-  { title: "Explore", links: [["Free tools", "/tools"], ["Success stories", "/success-stories"], ["Insights", "/insights"], ["KNOWN masterclass", "/known"]] },
+  { title: "Explore", links: [["Free tools", "/tools"], ["Success stories", "/success-stories"], ["KNOWN masterclass", "/known"]] },
   { title: "Diction", links: [["About", "/about"], ["Capabilities", "/capabilities"], ["The Collective", "/collective"], ["Registration", "/register"]] },
 ] as const;
 
